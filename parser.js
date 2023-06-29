@@ -1,18 +1,31 @@
-exports.parseForESLint = (code) => {
-  console.log(code);
+var espree = require("espree");
+
+function parseForESLint(code, options) {
+  console.log('parseForESLint', code);
   return {
+    // ast: espree.parse(code, options),
     ast: {
-      type: "Program",
-      loc: { start: 0, end: code.length },
-      range: [0, code.length],
+      // ast is JS ast. We don't have JS, so this AST is for empty JS file
+      type: 'Program',
+      start: 0,
+      end: 0,
+      loc: { start: { line: 1, column: 0 }, end: { line: 1, column: 0 } },
+      range: [0, 0],
       body: [],
-      comments: [],
       tokens: [],
+      comments: [],
+      // Used only by eslint-plugin-markdown-language
+      mdCode: code,
     },
-    services: { isPlain: true },
+    services: {
+      isPlain: true,
+      foo: function() {
+        console.log("foo");
+      }
+    },
     scopeManager: null,
-    visitorKeys: {
-      Program: [],
-    },
+    visitorKeys: null
   };
 };
+
+module.exports = { parseForESLint };
